@@ -1,0 +1,13 @@
+# Load kernel base dtb
+fdt addr ${fdt_addr}
+fdt resize
+
+# Apply overlay
+setexpr fdt_overlay_addr ${fdt_addr} + F000
+fatload ${devtype} ${devnum}:1 ${fdt_overlay_addr} overlays/tpm-slb9670.dtbo
+fdt apply ${fdt_overlay_addr}
+
+# Load & run kernel image
+fdt get value bootargs /chosen bootargs
+fatload ${devtype} ${devnum}:1 ${kernel_addr_r} kernel8.img
+booti ${kernel_addr_r} - ${fdt_addr}
