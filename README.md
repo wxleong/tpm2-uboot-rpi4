@@ -51,7 +51,7 @@ $ unzip 2021-10-30-raspios-bullseye-arm64.zip
 
 Download the 32-bit *Raspberry Pi OS with desktop* image (~1.2GB):
 ```
-$ curl https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2021-11-08/2021-10-30-raspios-bullseye-armhf.zip --output ~/2021-10-30-raspios-bullseye-armhf.zip
+$ curl https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-11-08/2021-10-30-raspios-bullseye-armhf.zip --output ~/2021-10-30-raspios-bullseye-armhf.zip
 $ cd ~
 $ unzip 2021-10-30-raspios-bullseye-armhf.zip
 ```
