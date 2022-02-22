@@ -84,7 +84,9 @@ $ sudo dd if=~/2021-10-30-raspios-bullseye-arm64.img of=/dev/??? bs=100M status=
 
 # Rebuild Raspberry Pi 4 Kernel (32-bit)
 
-Skip this section if you are not modifying the kernel source.
+**Ignore this section, this is for future reference only.**
+
+Rebuild the kernel to obtain an uncompressed flat image. The original kernel image is a gzip formatted image.
 
 On your host machine.
 
@@ -135,7 +137,7 @@ $ sudo umount mnt/ext4
 
 # Rebuild Raspberry Pi 4 Kernel (64-bit)
 
-Skip this section if you are not modifying the kernel source.
+Rebuild the kernel to obtain an uncompressed flat image. The original kernel image is a gzip formatted image.
 
 On your host machine.
 
@@ -296,16 +298,19 @@ Manually boot into Raspberry Pi OS:
 <pre><code># Load kernel base dtb
 <del>U-Boot> fatload mmc 0:1 ${fdt_addr} bcm2711-rpi-4-b.dtb // this is loaded by rpi firmware, <a href="https://forums.raspberrypi.com/viewtopic.php?t=314502">read here</a></del>
 U-Boot> fdt addr ${fdt_addr}
-U-Boot> fdt resize // resize to: fdt size + padding to 4k addr + optional extra size if needed, this step is neccessary to perform overlay, since it will add additional code to it, otherwise "fdt apply" will throw error FDT_ERR_NOSPACE
+U-Boot> fdt resize // resize fdt to size + padding to 4k addr + optional extra size if needed. This is neccessary otherwise "fdt apply" will throw error FDT_ERR_NOSPACE
 
 # Apply overlay
 U-Boot> setexpr fdt_overlay_addr ${fdt_addr} + F000
 U-Boot> fatload mmc 0:1 ${fdt_overlay_addr} overlays/tpm-slb9670.dtbo
 U-Boot> fdt apply ${fdt_overlay_addr}
 
-# Load & run kernel image
+# Load & boot the kernel image
 U-Boot> fdt get value bootargs /chosen bootargs
 U-Boot> fatload mmc 0:1 ${kernel_addr_r} kernel8.img
+U-Boot> fatsize mmc 0:1 kernel8.img
+<del>U-Boot> setenv kernel_comp_size 0x${filesize} // this is needed only if the kernel image is compressed </del>
+<del>U-Boot> setenv kernel_comp_addr_r 0x0A000000 // this is needed only if the kernel image is compressed </del>
 U-Boot> booti ${kernel_addr_r} - ${fdt_addr}
 </code></pre>
 
