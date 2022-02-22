@@ -8,8 +8,8 @@ Enable OPTIGA™ TPM 2.0 in U-Boot on Raspberry Pi 4. Extend critical measuremen
 - **[Raspberry Pi 4 Base Image](#raspberry-pi-4-base-image)**
 - **[Rebuild Raspberry Pi 4 Kernel (32-bit)](#rebuild-raspberry-pi-4-kernel-32-bit)**
 - **[Rebuild Raspberry Pi 4 Kernel (64-bit)](#rebuild-raspberry-pi-4-kernel-64-bit)**
-- **[Build U-Boot Binary](#build-u-boot-binary)**
-- **[Build U-Boot Boot Script](#build-u-boot-boot-script)**
+- **[Build U-Boot Binary (64-bit)](#build-u-boot-binary-64-bit)**
+- **[Build U-Boot Boot Script (64-bit)](#build-u-boot-boot-script-64-bit)**
 - **[Launch U-Boot](#launch-u-boot)**
 - **[References](#references)**
 - **[License](#license)**
@@ -49,7 +49,7 @@ $ cd ~
 $ unzip 2021-10-30-raspios-bullseye-arm64.zip
 ```
 
-Download the 32-bit *Raspberry Pi OS with desktop* image (~1.2GB):
+<del>Download the 32-bit *Raspberry Pi OS with desktop* image (~1.2GB):</del>
 ```
 $ curl https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-11-08/2021-10-30-raspios-bullseye-armhf.zip --output ~/2021-10-30-raspios-bullseye-armhf.zip
 $ cd ~
@@ -83,6 +83,8 @@ $ sudo dd if=~/2021-10-30-raspios-bullseye-arm64.img of=/dev/??? bs=100M status=
 ```
 
 # Rebuild Raspberry Pi 4 Kernel (32-bit)
+
+Skip this section if you are not modifying the kernel source.
 
 On your host machine.
 
@@ -133,6 +135,8 @@ $ sudo umount mnt/ext4
 
 # Rebuild Raspberry Pi 4 Kernel (64-bit)
 
+Skip this section if you are not modifying the kernel source.
+
 On your host machine.
 
 Install dependencies:
@@ -181,7 +185,7 @@ $ sudo umount /dev/sd?1
 $ sudo umount /dev/sd?2
 ```
 
-# Build U-Boot Binary
+# Build U-Boot Binary (64-bit)
 
 On your host machine.
 
@@ -235,7 +239,7 @@ kernel=u-boot.bin
 dtoverlay=uboot-tpm-slb9670
 ```
 
-# Build U-Boot Boot Script
+# Build U-Boot Boot Script (64-bit)
 
 Build U-Boot boot script:
 ```
