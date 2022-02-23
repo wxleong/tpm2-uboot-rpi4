@@ -114,7 +114,7 @@ Build:
 ```
 $ KERNEL=kernel7l
 $ make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2711_defconfig
-$ make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
+$ make -j$(nproc) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- Image modules dtbs
 ```
 
 Copy to microSD card:
@@ -128,7 +128,7 @@ $ sudo mount /dev/sd?1 mnt/fat32
 $ sudo mount /dev/sd?2 mnt/ext4
 $ sudo env PATH=$PATH make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=mnt/ext4 modules_install
 $ sudo cp mnt/fat32/$KERNEL.img mnt/fat32/$KERNEL-backup.img
-$ sudo cp arch/arm/boot/zImage mnt/fat32/$KERNEL.img
+$ sudo cp arch/arm/boot/Image mnt/fat32/$KERNEL.img
 $ sudo cp arch/arm/boot/dts/*.dtb mnt/fat32/
 $ sudo cp arch/arm/boot/dts/overlays/*.dtb* mnt/fat32/overlays/
 $ sudo cp arch/arm/boot/dts/overlays/README mnt/fat32/overlays/
