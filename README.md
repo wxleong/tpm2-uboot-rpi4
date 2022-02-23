@@ -341,6 +341,8 @@ $ ls /dev | grep tpm
 <a id="6">[6] https://u-boot.readthedocs.io/en/latest/build/</a><br>
 <a id="7">[7] https://u-boot.readthedocs.io/en/latest/usage/index.html#shell-commands</a><br>
 <a id="8">[8] https://github.com/joholl/rpi4-uboot-tpm</a><br>
+<a id="9">[9] https://github.com/u-boot/u-boot/blob/v2022.01-rc2/boot/image.c#L208</a><br>
+<a id="10">[10] https://github.com/torvalds/linux/blob/v5.10/Documentation/arm64/booting.rst</a><br>
 
 # License
 
