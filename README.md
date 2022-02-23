@@ -10,7 +10,8 @@ Enable OPTIGA™ TPM 2.0 in U-Boot on Raspberry Pi 4. Extend critical measuremen
 - **[Rebuild Raspberry Pi 4 Kernel (64-bit)](#rebuild-raspberry-pi-4-kernel-64-bit)**
 - **[Build U-Boot Binary (64-bit)](#build-u-boot-binary-64-bit)**
 - **[Build U-Boot Boot Script (64-bit)](#build-u-boot-boot-script-64-bit)**
-- **[Launch U-Boot](#launch-u-boot)**
+- **[Enter U-Boot](#enter-u-boot)**
+- **[Raspberry Pi OS](#raspberry-pi-os)**
 - **[References](#references)**
 - **[License](#license)**
 
@@ -243,6 +244,8 @@ dtoverlay=uboot-tpm-slb9670
 
 # Build U-Boot Boot Script (64-bit)
 
+The example boot scipt `boot.scr` only works with uncompressed kernel image.
+
 Build U-Boot boot script:
 ```
 $ git clone https://github.com/wxleong/tpm2-uboot ~/tpm2-uboot
@@ -250,11 +253,11 @@ $ cd ~/tpm2-uboot
 $ ~/u-boot/tools/mkimage -A arm64 -T script -C none -n "u-boot script" -d boot.scr boot.scr.uimg
 ```
 
-Copy `boot.scr.uimg` to your microSD card boot partition
+Copy `boot.scr.uimg` to your microSD card boot partition.
 
-# Launch U-Boot
+# Enter U-Boot
 
-Power up the rpi and it will boot into U-Boot. Hit any key to interrupt autoboot. Otherwise, the `boot.scr.uimg` will be executed. Some commands to try on U-Boot terminal:
+Power up the rpi and it will boot into U-Boot. Hit any key to interrupt autoboot. Otherwise, the `boot.scr.uimg` will be executed. Some shell commands to try on U-Boot:
 | Command | Info |
 |--|--|
 | `help` | Print supported commands. |
@@ -296,23 +299,37 @@ U-Boot> tpm2 pcr_read 0 20000000
 
 Manually boot into Raspberry Pi OS:
 <pre><code># Load kernel base dtb
-<del>U-Boot> fatload mmc 0:1 ${fdt_addr} bcm2711-rpi-4-b.dtb // this is loaded by rpi firmware, <a href="https://forums.raspberrypi.com/viewtopic.php?t=314502">read here</a></del>
+<del>U-Boot> fatload mmc 0:1 ${fdt_addr} bcm2711-rpi-4-b.dtb</del> // this is auto loaded by rpi firmware, <a href="https://forums.raspberrypi.com/viewtopic.php?t=314502">read here</a>
 U-Boot> fdt addr ${fdt_addr}
-U-Boot> fdt resize // resize fdt to size + padding to 4k addr + optional extra size if needed. This is neccessary otherwise "fdt apply" will throw error FDT_ERR_NOSPACE
+U-Boot> fdt resize 0x2000 // resize fdt to size + padding to 4k addr + extra size 0x2000. This is neccessary otherwise "fdt apply" will throw error FDT_ERR_NOSPACE
 
 # Apply overlay
-U-Boot> setexpr fdt_overlay_addr ${fdt_addr} + F000
+U-Boot> setexpr fdt_overlay_addr ${fdt_addr} + 0xF000
 U-Boot> fatload mmc 0:1 ${fdt_overlay_addr} overlays/tpm-slb9670.dtbo
 U-Boot> fdt apply ${fdt_overlay_addr}
 
 # Load & boot the kernel image
 U-Boot> fdt get value bootargs /chosen bootargs
 U-Boot> fatload mmc 0:1 ${kernel_addr_r} kernel8.img
-U-Boot> fatsize mmc 0:1 kernel8.img
-<del>U-Boot> setenv kernel_comp_size 0x${filesize} // this is needed only if the kernel image is compressed </del>
-<del>U-Boot> setenv kernel_comp_addr_r 0x0A000000 // this is needed only if the kernel image is compressed </del>
+<del>U-Boot> fatsize mmc 0:1 kernel8.img</del> // this is needed only if the kernel image is compressed
+<del>U-Boot> setenv kernel_comp_size ${filesize}</del> // this is needed only if the kernel image is compressed
+<del>U-Boot> setenv kernel_comp_addr_r 0x0A000000</del> // this is needed only if the kernel image is compressed
 U-Boot> booti ${kernel_addr_r} - ${fdt_addr}
 </code></pre>
+
+Boot into Raspberry Pi OS with a single command by executing the boot script `boot.scr.uimg` (the example scipt only works with uncompressed kernel image):
+```
+U-Boot> boot
+```
+
+# Raspberry Pi OS
+
+Once you entered the Raspberry Pi OS, check if the TPM is enabled by looking for the device nodes:
+```
+$ ls /dev | grep tpm
+/dev/tpm0
+/dev/tpmrm0
+```
 
 # References
 
@@ -322,7 +339,8 @@ U-Boot> booti ${kernel_addr_r} - ${fdt_addr}
 <a id="4">[4] https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compiling-the-kernel</a><br>
 <a id="5">[5] https://github.com/u-boot/u-boot</a><br>
 <a id="6">[6] https://u-boot.readthedocs.io/en/latest/build/</a><br>
-<a id="7">[7] https://github.com/joholl/rpi4-uboot-tpm</a><br>
+<a id="7">[7] https://u-boot.readthedocs.io/en/latest/usage/index.html#shell-commands</a><br>
+<a id="8">[8] https://github.com/joholl/rpi4-uboot-tpm</a><br>
 
 # License
 
